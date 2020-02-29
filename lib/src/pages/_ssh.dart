@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sample/src/pages/geo.dart';
 import 'package:ssh/ssh.dart';
 
 class IndexPage extends StatefulWidget {
@@ -12,6 +11,7 @@ class IndexState extends State<IndexPage> {
   final _portController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _commandController = TextEditingController();
   static String GEOID = "";
   bool _validateError = false;
 
@@ -21,6 +21,7 @@ class IndexState extends State<IndexPage> {
     _portController.dispose();
     _passwordController.dispose();
     _usernameController.dispose();
+    _commandController.dispose();
     super.dispose();
   }
 
@@ -30,8 +31,8 @@ class IndexState extends State<IndexPage> {
       backgroundColor: Color.fromRGBO(3, 9, 23, 1),
       body: Center(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          height: 400,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          height: 450,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -132,6 +133,28 @@ class IndexState extends State<IndexPage> {
                           ))),
                 ],
               ),
+              Row(
+                children: <Widget>[
+                  Expanded(
+                      child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white),
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            controller: _commandController,
+                            decoration: InputDecoration(
+                              errorText: _validateError
+                                  ? 'Command is mandatory'
+                                  : null,
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(width: 1),
+                              ),
+                              hintText: 'Command',
+                            ),
+                          ))),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Row(
@@ -148,7 +171,11 @@ class IndexState extends State<IndexPage> {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            executeSSH.execute(_usernameController,_passwordController,_portController,_hostController);
+                            executeSSH.execute(
+                                _usernameController,
+                                _passwordController,
+                                _portController,
+                                _hostController);
                           },
                         ),
                       ),
@@ -165,8 +192,11 @@ class IndexState extends State<IndexPage> {
 }
 
 class executeSSH {
-  static Future<void> execute(TextEditingController username, TextEditingController password, TextEditingController port, TextEditingController Address)
-  async {
+  static Future<void> execute(
+      TextEditingController username,
+      TextEditingController password,
+      TextEditingController port,
+      TextEditingController Address) async {
     var client = new SSHClient(
       host: Address.text,
       port: int.parse(port.text),
@@ -177,7 +207,9 @@ class executeSSH {
     await client.connect();
 //    Enter Command To Execute on HPC
     var currentTime = new DateTime.now();
-    String Command = "echo This File is Created on "+currentTime.toString()+" Using SSH > C:/Users/Hardik/Desktop/SSH.txt";
+    String Command = "echo This File is Created on " +
+        currentTime.toString() +
+        " Using SSH > C:/Users/Hardik/Desktop/SSH.txt";
     await client.execute(Command);
     await client.disconnect();
     Address.clear();
@@ -186,5 +218,4 @@ class executeSSH {
     password.clear();
     return;
   }
-
 }
