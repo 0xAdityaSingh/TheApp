@@ -168,7 +168,6 @@ class IndexState extends State<IndexPage> {
                         child: IconButton(
                           icon: Icon(
                             Icons.arrow_forward_ios,
-                            color: Colors.white,
                           ),
                           onPressed: () {
                             executeSSH.execute(
