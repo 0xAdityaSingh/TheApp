@@ -21,7 +21,11 @@ class GeoState extends State<GeoPage> {
     return Scaffold(
       backgroundColor: Color.fromRGBO(3, 9, 23, 1),
       appBar: AppBar(
-        title: Text('Test'),
+        title: Text(
+          'Test',
+          style: TextStyle(
+              color: Color.fromRGBO(3, 9, 23, 1), fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: Center(
