@@ -174,7 +174,8 @@ class IndexState extends State<IndexPage> {
                                 _usernameController,
                                 _passwordController,
                                 _portController,
-                                _hostController);
+                                _hostController,
+                                _commandController);
                           },
                         ),
                       ),
@@ -195,7 +196,8 @@ class executeSSH {
       TextEditingController username,
       TextEditingController password,
       TextEditingController port,
-      TextEditingController Address) async {
+      TextEditingController Address,
+      TextEditingController CommC) async {
     var client = new SSHClient(
       host: Address.text,
       port: int.parse(port.text),
@@ -210,11 +212,14 @@ class executeSSH {
         currentTime.toString() +
         " Using SSH > C:/Users/Hardik/Desktop/SSH.txt";
     await client.execute(Command);
+    var rs = await client.execute(CommC.text);
+    print(rs);
     await client.disconnect();
     Address.clear();
     port.clear();
     username.clear();
     password.clear();
+    CommC.clear();
     return;
   }
 }
