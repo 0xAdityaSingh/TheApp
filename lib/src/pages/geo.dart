@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:sample/src/pages/_ssh.dart';
+import 'package:flutter/material.dart';
 
 class GeoPage extends StatefulWidget {
   @override
@@ -20,10 +20,10 @@ class GeoState extends State<GeoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(3, 9, 23, 1),
-      // appBar: AppBar(
-      //   title: Text('GeoID'),
-      //   backgroundColor: Colors.lightBlueAccent,
-      // ),
+      appBar: AppBar(
+        title: Text('Test'),
+        backgroundColor: Colors.lightBlueAccent,
+      ),
       body: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -83,11 +83,10 @@ class GeoState extends State<GeoPage> {
                             onPressed: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                    builder: (context) {
-                                      IndexState.GEOID=_geoController.text;
-                                      return IndexPage();
-                                    }),
+                                MaterialPageRoute(builder: (context) {
+                                  IndexState.GEOID = _geoController.text;
+                                  return IndexPage();
+                                }),
                               );
                             }),
                       ),
