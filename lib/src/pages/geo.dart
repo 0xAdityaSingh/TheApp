@@ -7,7 +7,7 @@ class GeoPage extends StatefulWidget {
 }
 
 class GeoState extends State<GeoPage> {
-  final _geoController = TextEditingController();
+  static final _geoController = TextEditingController();
   bool _validateError = false;
 
   @override
@@ -78,13 +78,16 @@ class GeoState extends State<GeoPage> {
                         child: IconButton(
                             icon: Icon(
                               Icons.arrow_forward_ios,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => IndexPage()),
+                                    builder: (context) {
+                                      IndexState.GEOID=_geoController.text;
+                                      return IndexPage();
+                                    }),
                               );
                             }),
                       ),

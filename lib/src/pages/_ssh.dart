@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sample/src/pages/geo.dart';
+import 'package:ssh/ssh.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -10,6 +12,7 @@ class IndexState extends State<IndexPage> {
   final _portController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
+  static String GEOID = "";
   bool _validateError = false;
 
   @override
@@ -116,6 +119,7 @@ class IndexState extends State<IndexPage> {
                           child: TextField(
                             textAlign: TextAlign.center,
                             controller: _passwordController,
+                            obscureText: true,
                             decoration: InputDecoration(
                               errorText: _validateError
                                   ? 'Password is mandatory'
@@ -143,7 +147,9 @@ class IndexState extends State<IndexPage> {
                             Icons.arrow_forward_ios,
                             color: Colors.white,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            executeSSH.execute(_usernameController,_passwordController,_portController,_hostController);
+                          },
                         ),
                       ),
                     )
@@ -156,4 +162,29 @@ class IndexState extends State<IndexPage> {
       ),
     );
   }
+}
+
+class executeSSH {
+  static Future<void> execute(TextEditingController username, TextEditingController password, TextEditingController port, TextEditingController Address)
+  async {
+    var client = new SSHClient(
+      host: Address.text,
+      port: int.parse(port.text),
+      username: username.text,
+      passwordOrKey: password.text,
+    );
+//    Do Not Change Anything Here
+    await client.connect();
+//    Enter Command To Execute on HPC
+    var currentTime = new DateTime.now();
+    String Command = "echo This File is Created on "+currentTime.toString()+" Using SSH > C:/Users/Hardik/Desktop/SSH.txt";
+    await client.execute(Command);
+    await client.disconnect();
+    Address.clear();
+    port.clear();
+    username.clear();
+    password.clear();
+    return;
+  }
+
 }
