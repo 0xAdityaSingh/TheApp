@@ -11,7 +11,7 @@ class IndexState extends State<IndexPage> {
   final _portController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _commandController = TextEditingController();
+
   static String GEOID = "";
   bool _validateError = false;
 
@@ -21,7 +21,7 @@ class IndexState extends State<IndexPage> {
     _portController.dispose();
     _passwordController.dispose();
     _usernameController.dispose();
-    _commandController.dispose();
+
     super.dispose();
   }
 
@@ -133,28 +133,6 @@ class IndexState extends State<IndexPage> {
                           ))),
                 ],
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                      child: Container(
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white),
-                          child: TextField(
-                            textAlign: TextAlign.center,
-                            controller: _commandController,
-                            decoration: InputDecoration(
-                              errorText: _validateError
-                                  ? 'Command is mandatory'
-                                  : null,
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(width: 1),
-                              ),
-                              hintText: 'Command',
-                            ),
-                          ))),
-                ],
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Row(
@@ -174,8 +152,7 @@ class IndexState extends State<IndexPage> {
                                 _usernameController,
                                 _passwordController,
                                 _portController,
-                                _hostController,
-                                _commandController);
+                                _hostController);
                           },
                         ),
                       ),
@@ -193,13 +170,13 @@ class IndexState extends State<IndexPage> {
 
 class executeSSH {
   static Future<void> execute(
-      TextEditingController username,
-      TextEditingController password,
-      TextEditingController port,
-      TextEditingController Address,
-      TextEditingController CommC) async {
+    TextEditingController username,
+    TextEditingController password,
+    TextEditingController port,
+    TextEditingController address,
+  ) async {
     var client = new SSHClient(
-      host: Address.text,
+      host: address.text,
       port: int.parse(port.text),
       username: username.text,
       passwordOrKey: password.text,
@@ -207,19 +184,13 @@ class executeSSH {
 //    Do Not Change Anything Here
     await client.connect();
 //    Enter Command To Execute on HPC
-    var currentTime = new DateTime.now();
-    String Command = "echo This File is Created on " +
-        currentTime.toString() +
-        " Using SSH > C:/Users/Hardik/Desktop/SSH.txt";
-    await client.execute(Command);
-    var rs = await client.execute(CommC.text);
-    print(rs);
+    String _command = "mkdir test"; //comand here
+    await client.execute(_command);
     await client.disconnect();
-    Address.clear();
+    address.clear();
     port.clear();
     username.clear();
     password.clear();
-    CommC.clear();
     return;
   }
 }

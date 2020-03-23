@@ -7,12 +7,15 @@ class GeoPage extends StatefulWidget {
 }
 
 class GeoState extends State<GeoPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   static final _geoController = TextEditingController();
+  static final _sraController = TextEditingController();
   bool _validateError = false;
 
   @override
   void dispose() {
     _geoController.dispose();
+    _sraController.dispose();
     super.dispose();
   }
 
@@ -20,14 +23,14 @@ class GeoState extends State<GeoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(3, 9, 23, 1),
-      appBar: AppBar(
-        title: Text(
-          'Test',
-          style: TextStyle(
-              color: Color.fromRGBO(3, 9, 23, 1), fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: Colors.lightBlueAccent,
-      ),
+      // appBar: AppBar(
+      //   title: Text(
+      //     'Test',
+      //     style: TextStyle(
+      //         color: Color.fromRGBO(3, 9, 23, 1), fontWeight: FontWeight.bold),
+      //   ),
+      //   backgroundColor: Colors.lightBlueAccent,
+      // ),
       body: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -39,7 +42,48 @@ class GeoState extends State<GeoPage> {
                 "GeoID",
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 40,
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold),
+              ),
+              Text(
+                "Input",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold),
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
+                      child: TextField(
+                        controller: _geoController,
+                        textAlign: TextAlign.center,
+                        decoration: InputDecoration(
+                          border: UnderlineInputBorder(
+                            borderSide: BorderSide(width: 3),
+                          ),
+                          hintStyle:
+                              TextStyle(color: Colors.grey.withOpacity(.8)),
+                          errorText:
+                              _validateError ? 'GeoID is mandatory' : null,
+                          hintText: 'GeoID',
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                "Output",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold),
               ),
               Row(
@@ -52,7 +96,7 @@ class GeoState extends State<GeoPage> {
                             borderRadius: BorderRadius.circular(10),
                             color: Colors.white),
                         child: TextField(
-                          controller: _geoController,
+                          controller: _sraController,
                           textAlign: TextAlign.center,
                           decoration: InputDecoration(
                             // border: InputBorder.none,
@@ -62,8 +106,8 @@ class GeoState extends State<GeoPage> {
                             hintStyle:
                                 TextStyle(color: Colors.grey.withOpacity(.8)),
                             errorText:
-                                _validateError ? 'GeoID is mandatory' : null,
-                            hintText: 'GeoID',
+                                _validateError ? 'SRA ID is mandatory' : null,
+                            hintText: 'SRA ID',
                           ),
                         )),
                   ),
@@ -84,15 +128,7 @@ class GeoState extends State<GeoPage> {
                               Icons.arrow_forward_ios,
                               color: Colors.black,
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) {
-                                  IndexState.GEOID = _geoController.text;
-                                  return IndexPage();
-                                }),
-                              );
-                            }),
+                            onPressed: () {}),
                       ),
                     )
                   ],
@@ -102,6 +138,39 @@ class GeoState extends State<GeoPage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        child: const Icon(
+          Icons.navigate_next,
+          size: 45,
+          color: Colors.blue,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              IndexState.GEOID = _sraController.text;
+              return IndexPage();
+            }),
+          );
+        },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.help_outline),
+              color: Colors.black,
+              onPressed: () {},
+            ),
+          ],
+        ),
+        color: Colors.blue,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
