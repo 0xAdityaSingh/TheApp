@@ -72,44 +72,10 @@ class GeoState extends State<GeoPage> {
                               TextStyle(color: Colors.grey.withOpacity(.8)),
                           errorText:
                               _validateError ? 'GeoID is mandatory' : null,
-                          hintText: 'GeoID',
+                          hintText: 'GeoID/SRA ID',
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Text(
-                "Output",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold),
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white),
-                        child: TextField(
-                          controller: _sraController,
-                          textAlign: TextAlign.center,
-                          decoration: InputDecoration(
-                            // border: InputBorder.none,
-                            border: UnderlineInputBorder(
-                              borderSide: BorderSide(width: 3),
-                            ),
-                            hintStyle:
-                                TextStyle(color: Colors.grey.withOpacity(.8)),
-                            errorText:
-                                _validateError ? 'SRA ID is mandatory' : null,
-                            hintText: 'SRA ID',
-                          ),
-                        )),
                   ),
                 ],
               ),
