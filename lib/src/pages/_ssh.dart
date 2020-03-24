@@ -184,9 +184,11 @@ class executeSSH {
 //    Do Not Change Anything Here
     await client.connect();
 //    Enter Command To Execute on HPC
-    String _command = "mkdir test"; //comand here
-    await client.execute(_command);
-    await client.disconnect();
+    String _command = "./scriptExecuter "+IndexState.GEOID; //comand here
+    print(_command);
+    print(await client.execute("make"));
+    print(await client.execute(_command));
+    print(client.disconnect());
     address.clear();
     port.clear();
     username.clear();

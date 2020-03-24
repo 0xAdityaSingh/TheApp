@@ -9,13 +9,11 @@ class GeoPage extends StatefulWidget {
 class GeoState extends State<GeoPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   static final _geoController = TextEditingController();
-  static final _sraController = TextEditingController();
   bool _validateError = false;
 
   @override
   void dispose() {
     _geoController.dispose();
-    _sraController.dispose();
     super.dispose();
   }
 
@@ -115,7 +113,7 @@ class GeoState extends State<GeoPage> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
-              IndexState.GEOID = _sraController.text;
+              IndexState.GEOID = _geoController.text;
               return IndexPage();
             }),
           );
