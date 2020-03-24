@@ -21,14 +21,6 @@ class GeoState extends State<GeoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color.fromRGBO(3, 9, 23, 1),
-      // appBar: AppBar(
-      //   title: Text(
-      //     'Test',
-      //     style: TextStyle(
-      //         color: Color.fromRGBO(3, 9, 23, 1), fontWeight: FontWeight.bold),
-      //   ),
-      //   backgroundColor: Colors.lightBlueAccent,
-      // ),
       body: Center(
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -79,24 +71,6 @@ class GeoState extends State<GeoPage> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Ink(
-                        decoration: const ShapeDecoration(
-                          color: Colors.lightBlueAccent,
-                          shape: CircleBorder(),
-                        ),
-                        child: IconButton(
-                            icon: Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black,
-                            ),
-                            onPressed: () {}),
-                      ),
-                    )
-                  ],
-                ),
               ),
             ],
           ),
@@ -128,7 +102,21 @@ class GeoState extends State<GeoPage> {
             IconButton(
               icon: Icon(Icons.help_outline),
               color: Colors.black,
-              onPressed: () {},
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => new AlertDialog(
+                          title: new Text(
+                            "Information",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                          content: new Text(
+                              "Automated Alignment pipeline of SRA data using Accession IDs"),
+                          elevation: 24,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                        ));
+              },
             ),
           ],
         ),
