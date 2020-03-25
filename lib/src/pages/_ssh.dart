@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ssh/ssh.dart';
+import 'package:flutter_local_notifications_extended/flutter_local_notifications_extended.dart';
 
 class IndexPage extends StatefulWidget {
   @override
@@ -14,6 +15,53 @@ class IndexState extends State<IndexPage> {
 
   static String GEOID = "";
   bool _validateError = false;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  @override
+  initState() {
+    super.initState();
+    // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+    // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: _onSelectNotification);
+  }
+
+  Future _onSelectNotification(String payload) async {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return new AlertDialog(
+          title: Text(
+            "Complete!!",
+            style: TextStyle(color: Colors.blue),
+          ),
+          content: Text("Your task has been completed."),
+        );
+      },
+    );
+  }
+
+  Future _showNotificationWithDefaultSound() async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.Max, priority: Priority.High);
+    var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'Complete',
+      'Your task has been completed.',
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
 
   @override
   void dispose() {
@@ -148,11 +196,14 @@ class IndexState extends State<IndexPage> {
                             Icons.arrow_forward_ios,
                           ),
                           onPressed: () {
-                            executeSSH.execute(
+                            Future<bool> test = executeSSH.execute(
                                 _usernameController,
                                 _passwordController,
                                 _portController,
                                 _hostController);
+                            if (test == true) {
+                              _showNotificationWithDefaultSound();
+                            }
                           },
                         ),
                       ),
@@ -169,7 +220,7 @@ class IndexState extends State<IndexPage> {
 }
 
 class executeSSH {
-  static Future<void> execute(
+  static Future<bool> execute(
     TextEditingController username,
     TextEditingController password,
     TextEditingController port,
@@ -184,7 +235,7 @@ class executeSSH {
 //    Do Not Change Anything Here
     await client.connect();
 //    Enter Command To Execute on HPC
-    String _command = "./scriptExecuter "+IndexState.GEOID; //comand here
+    String _command = "./scriptExecuter " + IndexState.GEOID; //comand here
     print(_command);
     print(await client.execute("make"));
     print(await client.execute(_command));
@@ -193,6 +244,6 @@ class executeSSH {
     port.clear();
     username.clear();
     password.clear();
-    return;
+    return true;
   }
 }
