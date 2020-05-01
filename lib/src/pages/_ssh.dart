@@ -1,7 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:ssh/ssh.dart';
 import 'package:flutter_local_notifications_extended/flutter_local_notifications_extended.dart';
-
+import 'package:flutter/services.dart';
+import '../../advance.dart';
+bool _get=false;
 class IndexPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => IndexState();
@@ -188,7 +192,7 @@ class IndexState extends State<IndexPage> {
                     Expanded(
                       child: Ink(
                         decoration: const ShapeDecoration(
-                          color: Colors.lightBlueAccent,
+                          color: Colors.blue,
                           shape: CircleBorder(),
                         ),
                         child: IconButton(
@@ -211,10 +215,87 @@ class IndexState extends State<IndexPage> {
                   ],
                 ),
               ),
+              MaterialButton(color: Colors.blue,child: Text("Download",style: TextStyle(fontSize: 25,fontWeight: FontWeight.w900),)
+              ,onPressed: () {
+                print(_get);
+                if(_get==true){
+Future<bool> test = getSSH.onClickSFTP(
+                                _usernameController,
+                                _passwordController,
+                                _portController,
+                                _hostController);
+                            if (test == true) {
+                              _showNotificationWithDefaultSound();
+                }}
+                else{
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) => new AlertDialog(
+                          title: new Text(
+                            "Alert!!!",
+                            style: TextStyle(color: Colors.red),
+                          ),
+                          content: new Text(
+                              "Process Not Completed"),
+                          elevation: 24,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                        ));
+                
+                
+                            }
+              },),
             ],
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        child: const Icon(
+          Icons.navigate_next,
+          size: 45,
+          color: Colors.blue,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              // IndexState.GEOID = _geoController.text;
+              return advance();
+            }),
+          );
+        },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.help_outline),
+              color: Colors.black,
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => new AlertDialog(
+                          title: new Text(
+                            "Information",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                          content: new Text(
+                              "Enter Your SSH Details."),
+                          elevation: 24,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                        ));
+              },
+            ),
+          ],
+        ),
+        color: Colors.blue,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
@@ -240,10 +321,52 @@ class executeSSH {
     print(await client.execute("make"));
     print(await client.execute(_command));
     print(client.disconnect());
-    address.clear();
+    _get=true;
+    return true;
+  }
+}
+class getSSH {
+  static Future<void> onClickSFTP(
+        
+     TextEditingController username,
+    TextEditingController password,
+    TextEditingController port,
+    TextEditingController address,
+  ) async {
+
+    // var address;
+        var client = new SSHClient(
+           host: address.text,
+          port: int.parse(port.text),
+          username: username.text,
+          passwordOrKey: password.text,
+    );
+
+    try {
+      String result = await client.connect();
+      if (result == "session_connected") {
+        result = await client.connectSFTP();
+        if (result == "sftp_connected") {
+          var filePath = await client.sftpDownload(
+            path: "testupload",//file path
+            toPath: "tempPath",//place where u want it
+            callback: (progress) async {
+              print(progress);
+              // if (progress == 20) await client.sftpCancelDownload();
+            },
+          );
+
+          print(await client.disconnectSFTP());
+
+          client.disconnect();
+              address.clear();
     port.clear();
     username.clear();
     password.clear();
-    return true;
+        }
+      }
+    } on PlatformException catch (e) {
+      print('Error: ${e.code}\nError Message: ${e.message}');
+    }
   }
 }
