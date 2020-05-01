@@ -354,8 +354,8 @@ class getSSH {
         result = await client.connectSFTP();
         if (result == "sftp_connected") {
           var filePath = await client.sftpDownload(
-            path: "testupload",//file path
-            toPath: "tempPath",//place where u want it
+            path: "~/Desktop/test.html",//file path
+            toPath: "~/sdcard/Download/test.html",//place where u want it
             callback: (progress) async {
               print(progress);
               // if (progress == 20) await client.sftpCancelDownload();
