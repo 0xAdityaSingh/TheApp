@@ -5,7 +5,7 @@ import 'package:ssh/ssh.dart';
 import 'package:flutter_local_notifications_extended/flutter_local_notifications_extended.dart';
 import 'package:flutter/services.dart';
 import '../../advance.dart';
-bool _get=false;
+bool _get=true;
 class IndexPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => IndexState();
