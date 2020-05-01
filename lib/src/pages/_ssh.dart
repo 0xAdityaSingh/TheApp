@@ -215,7 +215,9 @@ class IndexState extends State<IndexPage> {
                   ],
                 ),
               ),
-              MaterialButton(color: Colors.blue,child: Text("Download",style: TextStyle(fontSize: 25,fontWeight: FontWeight.w900),)
+              RaisedButton(
+  shape: StadiumBorder(),color: Colors.blue,child: Text("Download",style: TextStyle(fontSize: 25),)
+              
               ,onPressed: () {
                 print(_get);
                 if(_get==true){
@@ -321,6 +323,10 @@ class executeSSH {
     print(await client.execute("make"));
     print(await client.execute(_command));
     print(client.disconnect());
+    address.clear();
+    port.clear();
+    username.clear();
+    password.clear();
     _get=true;
     return true;
   }
@@ -360,9 +366,9 @@ class getSSH {
 
           client.disconnect();
               address.clear();
-    port.clear();
-    username.clear();
-    password.clear();
+              port.clear();
+              username.clear();
+              password.clear();
         }
       }
     } on PlatformException catch (e) {
