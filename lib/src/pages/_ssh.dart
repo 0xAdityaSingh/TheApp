@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:ssh/ssh.dart';
 import 'package:flutter_local_notifications_extended/flutter_local_notifications_extended.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/foundation.dart';
-import 'dart:async';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart' as ph;
+import 'dart:async';
 import '../../advance.dart';
-bool _get=true;
+
+bool _get = true;
+
 class IndexPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => IndexState();
@@ -219,42 +221,41 @@ class IndexState extends State<IndexPage> {
                 ),
               ),
               RaisedButton(
-  shape: StadiumBorder(),color: Colors.blue,child: Text("Download",style: TextStyle(fontSize: 25),)
-              
-              ,onPressed: () async {
-                Directory tempDir = await getTemporaryDirectory();
-          String tempPath = tempDir.path;
-          print(tempPath);
-                print(_get);
-                if(_get==true){
+                shape: StadiumBorder(),
+                color: Colors.blue,
+                child: Text(
+                  "Download",
+                  style: TextStyle(fontSize: 25),
+                ),
+                onPressed: () async {
+                  Directory tempDir = await getTemporaryDirectory();
+                  String tempPath = tempDir.path;
+                  print(tempPath);
+                  print(_get);
+                  if (_get == true) {
 // Future<bool> test =
- getSSH.onClickSFTP(
-                                _usernameController,
-                                _passwordController,
-                                _portController,
-                                _hostController);
-                            // if (test == true) {
-                            //   _showNotificationWithDefaultSound();
-                // }
-                }
-                else{
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) => new AlertDialog(
-                          title: new Text(
-                            "Alert!!!",
-                            style: TextStyle(color: Colors.red),
-                          ),
-                          content: new Text(
-                              "Process Not Completed"),
-                          elevation: 24,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0)),
-                        ));
-                
-                
-                            }
-              },),
+                    getSSH.onClickSFTP(_usernameController, _passwordController,
+                        _portController, _hostController);
+                    // if (test == true) {
+                    //   _showNotificationWithDefaultSound();
+                    // }
+                  } else {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => new AlertDialog(
+                              title: new Text(
+                                "Alert!!!",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              content: new Text("Process Not Completed"),
+                              elevation: 24,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(10.0)),
+                            ));
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -293,8 +294,7 @@ class IndexState extends State<IndexPage> {
                             "Information",
                             style: TextStyle(color: Colors.blue),
                           ),
-                          content: new Text(
-                              "Enter Your SSH Details."),
+                          content: new Text("Enter Your SSH Details."),
                           elevation: 24,
                           shape: RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(10.0)),
@@ -335,59 +335,67 @@ class executeSSH {
     port.clear();
     username.clear();
     password.clear();
-    _get=true;
+    _get = true;
     return true;
   }
 }
+
 class getSSH {
+
   static Future<void> onClickSFTP(
-        
-     TextEditingController username,
+    TextEditingController username,
     TextEditingController password,
     TextEditingController port,
     TextEditingController address,
   ) async {
-
     // var address;
-        var client = new SSHClient(
-           host: address.text,
-          port: int.parse(port.text),
-          username: username.text,
-          passwordOrKey: password.text,
+    var client = new SSHClient(
+      host: address.text,
+      port: int.parse(port.text),
+      username: username.text,
+      passwordOrKey: password.text,
     );
+    Map<ph.PermissionGroup, ph.PermissionStatus> permissions =
+        await ph.PermissionHandler()
+            .requestPermissions([ph.PermissionGroup.storage]);
+    if (permissions[ph.PermissionGroup.storage] ==
+        ph.PermissionStatus.granted) {
+      try {
+        String result = await client.connect();
+        if (result == "session_connected") {
+          result = await client.connectSFTP();
+          if (result == "sftp_connected") {
+            Directory tempDir = await getExternalStorageDirectory();
+            String tempPath = tempDir.path;
+            var filePath = await client
+                .sftpDownload(
+                  path: "/home/saad/Desktop/test.html", //file path
+                  toPath: "$tempPath/test.html", //place where u want it
+                  callback: (progress) async {
+                    print(progress);
+                    print(tempPath);
+                    print("Am here");
+                    // if (progress == 20) await client.sftpCancelDownload();
+                  },
+                );
 
-    try {
-      String result = await client.connect();
-      if (result == "session_connected") {
-        result = await client.connectSFTP();
-        if (result == "sftp_connected") {
-          Directory tempDir = await getTemporaryDirectory();
-          String tempPath = tempDir.path;
-          var filePath = await client.sftpDownload(
-            path: "~/Desktop/test.html",//file path
-            toPath: "$tempPath/test.html",//place where u want it
-            
-            callback: (progress) async {
-              print(progress);
-              print(tempPath);
-              // if (progress == 20) await client.sftpCancelDownload();
-            },
-          );
+            print(await client.disconnectSFTP());
 
-          print(await client.disconnectSFTP());
-
-          client.disconnect();
-              address.clear();
-              port.clear();
-              username.clear();
-              password.clear();
+            client.disconnect();
+            address.clear();
+            port.clear();
+            username.clear();
+            password.clear();
+          }
         }
+      } on PlatformException catch (e) {
+        print('Error: ${e.code}\nError Message: ${e.message}');
       }
-    } on PlatformException catch (e) {
-      print('Error: ${e.code}\nError Message: ${e.message}');
     }
   }
-}class Storage {
+}
+
+class Storage {
   Future<String> get localPath async {
     final dir = await getApplicationDocumentsDirectory();
     return dir.path;
@@ -396,4 +404,5 @@ class getSSH {
   Future<File> get localFile async {
     final path = await localPath;
     return File('$path/db.txt');
-  }}
+  }
+}
