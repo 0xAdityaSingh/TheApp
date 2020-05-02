@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:ssh/ssh.dart';
 import 'package:flutter_local_notifications_extended/flutter_local_notifications_extended.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:async';
+import 'package:path_provider/path_provider.dart';
 import '../../advance.dart';
 bool _get=true;
 class IndexPage extends StatefulWidget {
@@ -218,17 +221,22 @@ class IndexState extends State<IndexPage> {
               RaisedButton(
   shape: StadiumBorder(),color: Colors.blue,child: Text("Download",style: TextStyle(fontSize: 25),)
               
-              ,onPressed: () {
+              ,onPressed: () async {
+                Directory tempDir = await getTemporaryDirectory();
+          String tempPath = tempDir.path;
+          print(tempPath);
                 print(_get);
                 if(_get==true){
-Future<bool> test = getSSH.onClickSFTP(
+// Future<bool> test =
+ getSSH.onClickSFTP(
                                 _usernameController,
                                 _passwordController,
                                 _portController,
                                 _hostController);
-                            if (test == true) {
-                              _showNotificationWithDefaultSound();
-                }}
+                            // if (test == true) {
+                            //   _showNotificationWithDefaultSound();
+                // }
+                }
                 else{
                   showDialog(
                     context: context,
@@ -353,11 +361,15 @@ class getSSH {
       if (result == "session_connected") {
         result = await client.connectSFTP();
         if (result == "sftp_connected") {
+          Directory tempDir = await getTemporaryDirectory();
+          String tempPath = tempDir.path;
           var filePath = await client.sftpDownload(
             path: "~/Desktop/test.html",//file path
-            toPath: "~/sdcard/Download/test.html",//place where u want it
+            toPath: "$tempPath/test.html",//place where u want it
+            
             callback: (progress) async {
               print(progress);
+              print(tempPath);
               // if (progress == 20) await client.sftpCancelDownload();
             },
           );
@@ -375,4 +387,13 @@ class getSSH {
       print('Error: ${e.code}\nError Message: ${e.message}');
     }
   }
-}
+}class Storage {
+  Future<String> get localPath async {
+    final dir = await getApplicationDocumentsDirectory();
+    return dir.path;
+  }
+
+  Future<File> get localFile async {
+    final path = await localPath;
+    return File('$path/db.txt');
+  }}
