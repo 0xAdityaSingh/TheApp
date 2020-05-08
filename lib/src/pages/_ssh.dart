@@ -23,6 +23,7 @@ class IndexState extends State<IndexPage> {
   final _passwordController = TextEditingController();
 
   static String GEOID = "";
+  static int ENDPOINT = 2;
   bool _validateError = false;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
@@ -326,9 +327,10 @@ class executeSSH {
 //    Do Not Change Anything Here
     await client.connect();
 //    Enter Command To Execute on HPC
-    String _command = "./scriptExecuter " + IndexState.GEOID; //comand here
+    String _command = "mkdir ~/${IndexState.GEOID}"; //comand here
     print(_command);
-    print(await client.execute("make"));
+    print(await client.execute(_command));
+    _command = "nohup python nvbi.py ${IndexState.ENDPOINT} ${IndexState.GEOID}>~/${IndexState.GEOID}/stdout.txt 2>~/${IndexState.GEOID}/stderr.txt &";
     print(await client.execute(_command));
     print(client.disconnect());
     address.clear();

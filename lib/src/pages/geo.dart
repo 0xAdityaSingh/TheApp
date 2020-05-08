@@ -10,11 +10,52 @@ class GeoState extends State<GeoPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   static final _geoController = TextEditingController();
   bool _validateError = false;
+  int selectedEndPoint = 2;
 
   @override
   void dispose() {
     _geoController.dispose();
     super.dispose();
+  }
+
+  List<String> endOptions = [
+    "Download SRA only",
+    "Splitted Fastq Files, QC",
+    "PreProcessed FastQ Files, QC",
+    "Aligned File",
+    "Count Matrix",
+    "DGE (R)",
+    "gene ontology (R)"
+  ];
+
+  _dropdown(currentItem, _list, listname) {
+    return DropdownButton<String>(
+      hint: new Text("End Point", style: TextStyle(color: Colors.blue)),
+      icon: Icon(Icons.arrow_downward),
+      iconSize: 24,
+      elevation: 16,
+      style: TextStyle(color: Colors.blue),
+      underline: Container(
+        height: 2,
+        color: Colors.blue,
+      ),
+      onChanged: (String newValue) {
+        for(var i=0;i<endOptions.length;i++){
+          if(endOptions[i]==newValue){
+            selectedEndPoint = i+1;
+          }
+        }
+        print(selectedEndPoint);
+        setState(() {
+        });
+      },
+      items: _list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
   }
 
   @override
@@ -69,6 +110,16 @@ class GeoState extends State<GeoPage> {
                   ),
                 ],
               ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child:
+                        _dropdown(this.selectedEndPoint, this.endOptions, "End Point"),
+                  ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
               ),
@@ -88,6 +139,7 @@ class GeoState extends State<GeoPage> {
             context,
             MaterialPageRoute(builder: (context) {
               IndexState.GEOID = _geoController.text;
+              IndexState.ENDPOINT = selectedEndPoint;
               return IndexPage();
             }),
           );
