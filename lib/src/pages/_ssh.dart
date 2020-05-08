@@ -330,7 +330,7 @@ class executeSSH {
     String _command = "mkdir ~/${IndexState.GEOID}"; //comand here
     print(_command);
     print(await client.execute(_command));
-    _command = "nohup python nvbi.py ${IndexState.ENDPOINT} ${IndexState.GEOID}>~/${IndexState.GEOID}/stdout.txt 2>~/${IndexState.GEOID}/stderr.txt &";
+    _command = "nohup python3 nvbi.py ${IndexState.ENDPOINT} ${IndexState.GEOID}>~/${IndexState.GEOID}/stdout.txt 2>~/${IndexState.GEOID}/stderr.txt &";
     print(await client.execute(_command));
     print(client.disconnect());
     address.clear();
