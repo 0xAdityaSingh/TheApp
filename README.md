@@ -1,16 +1,10 @@
-# sample
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Abstract
+The alignment of genomic data takes a significant amount of time and
+for someone who is attending a conference or currently does not have
+access to their HPC, they would be required to wait to get to their
+workspace to even get the process started.
+Our application, one would just need to enter the Accession ID on
+their mobile and the downloading followed by the alignment of the data
+with the reference genome will begin automatically on the connected
+HPC. This would be a time saver for anyone whose work includes the
+alignment of such data.
