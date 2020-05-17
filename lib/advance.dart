@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'src/pages/_ssh.dart';
+
 String _value = "1";
 Color _selectedColor=Color.fromRGBO(3, 9, 23, 1);
 class advance extends StatefulWidget {
   @override
-  _advanceState createState() => _advanceState();
+  advanceState createState() => advanceState();
 }
 
-class _advanceState extends State<advance> {
+class advanceState extends State<advance> {
+  static String GEOID = "";
+  static int ENDPOINT = 2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,7 +83,54 @@ class _advanceState extends State<advance> {
     ),
         ],
       ),
-      
+       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        child: const Icon(
+          Icons.navigate_next,
+          size: 45,
+          color: Colors.blue,
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              // IndexState.GEOID = _geoController.text;
+              IndexState.GEOID = GEOID;
+              IndexState.ENDPOINT = ENDPOINT;
+              return IndexPage();
+            }),
+          );
+        },
+      ),
+      bottomNavigationBar: BottomAppBar(
+        shape: CircularNotchedRectangle(),
+        child: new Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.help_outline),
+              color: Colors.black,
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => new AlertDialog(
+                          title: new Text(
+                            "Advance Options",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                          content: new Text("XXXXXXXXX"),// enter the details to show in alert box
+                          elevation: 24,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                        ));
+              },
+            ),
+          ],
+        ),
+        color: Colors.blue,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

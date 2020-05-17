@@ -1,5 +1,6 @@
-import 'package:sample/src/pages/_ssh.dart';
 import 'package:flutter/material.dart';
+
+import '../../advance.dart';
 
 class GeoPage extends StatefulWidget {
   @override
@@ -7,7 +8,6 @@ class GeoPage extends StatefulWidget {
 }
 
 class GeoState extends State<GeoPage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   static final _geoController = TextEditingController();
   bool _validateError = false;
   int selectedEndPoint = 2;
@@ -34,7 +34,7 @@ class GeoState extends State<GeoPage> {
       icon: Icon(Icons.arrow_downward),
       iconSize: 24,
       elevation: 16,
-      style: TextStyle(color: Colors.blue),
+      style: TextStyle(color: Colors.blue,fontSize: 18),
       underline: Container(
         height: 2,
         color: Colors.blue,
@@ -138,9 +138,10 @@ class GeoState extends State<GeoPage> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) {
-              IndexState.GEOID = _geoController.text;
-              IndexState.ENDPOINT = selectedEndPoint;
-              return IndexPage();
+              advanceState.GEOID = _geoController.text;
+              advanceState.ENDPOINT = selectedEndPoint;
+
+              return advance();
             }),
           );
         },

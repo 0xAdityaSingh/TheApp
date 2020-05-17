@@ -7,10 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart' as ph;
 import 'dart:async';
-import '../../advance.dart';
 
 bool _get = true;
-
+var _context;
 class IndexPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => IndexState();
@@ -56,7 +55,6 @@ class IndexState extends State<IndexPage> {
       },
     );
   }
-
   Future _showNotificationWithDefaultSound() async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',
@@ -85,6 +83,7 @@ class IndexState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
+    _context=context;
     return Scaffold(
       backgroundColor: Color.fromRGBO(3, 9, 23, 1),
       body: Center(
@@ -206,6 +205,7 @@ class IndexState extends State<IndexPage> {
                             Icons.arrow_forward_ios,
                           ),
                           onPressed: () {
+                            
                             Future<bool> test = executeSSH.execute(
                                 _usernameController,
                                 _passwordController,
@@ -222,11 +222,11 @@ class IndexState extends State<IndexPage> {
                 ),
               ),
               RaisedButton(
-                shape: StadiumBorder(),
+                // shape: StadiumBorder(),
                 color: Colors.blue,
                 child: Text(
                   "Download",
-                  style: TextStyle(fontSize: 25),
+                  style: TextStyle(fontSize: 30),
                 ),
                 onPressed: () async {
                   Directory tempDir = await getTemporaryDirectory();
@@ -234,12 +234,9 @@ class IndexState extends State<IndexPage> {
                   print(tempPath);
                   print(_get);
                   if (_get == true) {
-// Future<bool> test =
                     getSSH.onClickSFTP(_usernameController, _passwordController,
                         _portController, _hostController);
-                    // if (test == true) {
-                    //   _showNotificationWithDefaultSound();
-                    // }
+                    
                   } else {
                     showDialog(
                         context: context,
@@ -261,52 +258,6 @@ class IndexState extends State<IndexPage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        child: const Icon(
-          Icons.navigate_next,
-          size: 45,
-          color: Colors.blue,
-        ),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) {
-              // IndexState.GEOID = _geoController.text;
-              return advance();
-            }),
-          );
-        },
-      ),
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: new Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.help_outline),
-              color: Colors.black,
-              onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) => new AlertDialog(
-                          title: new Text(
-                            "Information",
-                            style: TextStyle(color: Colors.blue),
-                          ),
-                          content: new Text("Enter Your SSH Details."),
-                          elevation: 24,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(10.0)),
-                        ));
-              },
-            ),
-          ],
-        ),
-        color: Colors.blue,
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
@@ -343,12 +294,14 @@ class executeSSH {
 }
 
 class getSSH {
+  
 
   static Future<void> onClickSFTP(
     TextEditingController username,
     TextEditingController password,
     TextEditingController port,
     TextEditingController address,
+    
   ) async {
     // var address;
     var client = new SSHClient(
@@ -369,7 +322,8 @@ class getSSH {
           if (result == "sftp_connected") {
             Directory tempDir = await getExternalStorageDirectory();
             String tempPath = tempDir.path;
-            var filePath = await client
+            
+                var filePath = await client
                 .sftpDownload(
                   path: "/home/saad/Desktop/test.html", //file path
                   toPath: "$tempPath/test.html", //place where u want it
@@ -380,7 +334,6 @@ class getSSH {
                     // if (progress == 20) await client.sftpCancelDownload();
                   },
                 );
-
             print(await client.disconnectSFTP());
 
             client.disconnect();
@@ -388,11 +341,39 @@ class getSSH {
             port.clear();
             username.clear();
             password.clear();
+                      showDialog(
+                        context: _context,
+                        builder: (BuildContext context) => new AlertDialog(
+                              title: new Text(
+                                "Alert!!!",
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              content: new Text("Process Completed"),
+                              elevation: 24,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(10.0)),
+                            ));
+            
           }
         }
       } on PlatformException catch (e) {
         print('Error: ${e.code}\nError Message: ${e.message}');
-      }
+        print("Not Completed");
+          showDialog(
+                        context: _context,
+                        builder: (BuildContext context) => new AlertDialog(
+                              title: new Text(
+                                "Alert!!!",
+                                style: TextStyle(color: Colors.red),
+                              ),
+                              content: new Text("Process Not Completed"),
+                              elevation: 24,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(10.0)),
+                            ));
+             }
     }
   }
 }
