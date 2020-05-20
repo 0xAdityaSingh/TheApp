@@ -119,41 +119,35 @@ class advanceState extends State<advance> {
                     DropdownMenuItem(
                       value: "1",
                       child: Text(
-                        "Get sorted BAM/SAM files",
+                        "Get SRA dataset",
                       ),
                     ),
                     DropdownMenuItem(
                       value: "2",
                       child: Text(
-                        "Get SRA dataset",
+                        "Get fastq files",
                       ),
                     ),
                     DropdownMenuItem(
                       value: "3",
                       child: Text(
-                        "Get fastq files",
+                        "Get reference genome and annotations",
                       ),
                     ),
                     DropdownMenuItem(
                       value: "4",
                       child: Text(
-                        "Get reference genome and annotations",
+                        "Get alignmnet bam file",
                       ),
                     ),
                     DropdownMenuItem(
                       value: "5",
                       child: Text(
-                        "Get alignmnet bam file",
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: "6",
-                      child: Text(
                         "Get sorted BAM/SAM files",
                       ),
                     ),
                     DropdownMenuItem(
-                      value: "7",
+                      value: "6",
                       child: Text(
                         "Get Count matrix",
                       ),
