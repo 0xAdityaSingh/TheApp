@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'src/pages/_ssh.dart';
 
 String _value = "1";
+String _value2 = "1";
 Color _selectedColor=Color.fromRGBO(3, 9, 23, 1);
 class advance extends StatefulWidget {
   @override
@@ -31,41 +32,39 @@ class advanceState extends State<advance> {
                 ),
           ),
           Radiobutton(),
-          Container(height:40),
-          Center(
-            
-          child: Row(
+          // Container(height:40),
+          Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[Text(
-                    "Trimming",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold),
-                  ),
+            children: <Widget>[Container(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(50, 10, 0, 10),
+                child: Text(
+                        "Trimming",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold),
+                      ),
+              ),
+            ),
                   Container(width:40),
               Container(
                 color: _selectedColor,
                 child: DropdownButton<String>(
-                  style: TextStyle(color: Colors.blue,fontSize: 20),
+                  style: TextStyle(color: Colors.blue,fontSize: 18),
                   items: [
                     DropdownMenuItem(
                       value: "1",
                       child: Text(
-                        "Low",
+                        "Remove rRNA contamination",
                         
                       ),
                     ),
                     DropdownMenuItem(
                       value: "2",
                       child: Text(
-                        "Moderate",
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: "3",
-                      child: Text(
-                        "High",
+                        "Trim reads",
                       ),
                     ),
                   ],
@@ -73,14 +72,104 @@ class advanceState extends State<advance> {
                     setState(() {
                       _value = value;
                       print(_value);
+                      // print('HIIIIII');
+                                            if(value=="2"){
+                        showDialog(
+                    context: context,
+                    builder: (BuildContext context) => new AlertDialog(
+                          title: new Text(
+                            "Minimum Quality Score",
+                            style: TextStyle(color: Colors.blue),
+                          ),
+                          // content: new Text("XXXXXXXXX"),// enter the details to show in alert box
+                          elevation: 24,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(10.0)),
+                        ));
+                      }
                     });
                   },
                   value: _value,
+                  
                 ),
               ),
             ],
           ),
-    ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[Container(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(50, 10, 0, 10),
+                child: Text(
+                        "Breakpoint",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 35,
+                            fontWeight: FontWeight.bold),
+                      ),
+              ),
+            ),
+                  Container(width:40),
+              Container(
+                color: _selectedColor,
+                child: DropdownButton<String>(
+                  style: TextStyle(color: Colors.blue,fontSize: 18),
+                  items: [
+                    DropdownMenuItem(
+                      value: "1",
+                      child: Text(
+                        "Get sorted BAM/SAM files",
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: "2",
+                      child: Text(
+                        "Get SRA dataset",
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: "3",
+                      child: Text(
+                        "Get fastq files",
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: "4",
+                      child: Text(
+                        "Get reference genome and annotations",
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: "5",
+                      child: Text(
+                        "Get alignmnet bam file",
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: "6",
+                      child: Text(
+                        "Get sorted BAM/SAM files",
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: "7",
+                      child: Text(
+                        "Get Count matrix",
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _value2 = value;
+                      print(_value2);
+                    });
+                  },
+                  value: _value2,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
        floatingActionButton: FloatingActionButton(
@@ -97,6 +186,8 @@ class advanceState extends State<advance> {
               // IndexState.GEOID = _geoController.text;
               IndexState.GEOID = GEOID;
               IndexState.ENDPOINT = ENDPOINT;
+              IndexState.Value1 = _value;
+              IndexState.Value2 = _value2;
               return IndexPage();
             }),
           );
@@ -148,9 +239,10 @@ class RadioButtonWidget extends State {
         children: <Widget>[
 
             Container(
+
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(50, 30, 0, 30),
+                padding: const EdgeInsets.fromLTRB(50, 10, 0, 10),
                 child: Text(
                         "Radio",
                         style: TextStyle(
@@ -184,8 +276,25 @@ class RadioButtonWidget extends State {
             ),
 
           //  Text('$radioItem', style: TextStyle(color: Colors.white,fontSize: 20),)//printing items
+
           
         ],
     );
   }
 }
+
+
+
+// Get sorted BAM/SAM files
+// Get SRA dataset
+// Get fastq files
+// Get reference genome and annotations
+// Get alignmnet bam file
+// Get sorted BAM/SAM files
+// Get Count matrix
+
+
+
+
+// remove rRNA contamination
+// trim reads    minimum quality score

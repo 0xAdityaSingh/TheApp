@@ -22,6 +22,8 @@ class IndexState extends State<IndexPage> {
   final _passwordController = TextEditingController();
 
   static String GEOID = "";
+  static String Value1 = "";
+  static String Value2 = "";
   static int ENDPOINT = 2;
   bool _validateError = false;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
