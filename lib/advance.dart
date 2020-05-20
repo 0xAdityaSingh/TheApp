@@ -131,23 +131,29 @@ class advanceState extends State<advance> {
                     DropdownMenuItem(
                       value: "3",
                       child: Text(
-                        "Get reference genome and annotations",
+                        "Get fastq files",
                       ),
                     ),
                     DropdownMenuItem(
                       value: "4",
                       child: Text(
-                        "Get alignmnet bam file",
+                        "Get reference genome and annotations",
                       ),
                     ),
                     DropdownMenuItem(
                       value: "5",
                       child: Text(
-                        "Get sorted BAM/SAM files",
+                        "Get alignmnet bam file",
                       ),
                     ),
                     DropdownMenuItem(
                       value: "6",
+                      child: Text(
+                        "Get sorted BAM/SAM files",
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: "7",
                       child: Text(
                         "Get Count matrix",
                       ),
