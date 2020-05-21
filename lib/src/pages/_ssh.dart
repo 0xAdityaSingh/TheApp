@@ -280,16 +280,22 @@ class executeSSH {
 //    Do Not Change Anything Here
     await client.connect();
 //    Enter Command To Execute on HPC
-    String _command = "mkdir ~/${IndexState.GEOID}"; //comand here
+    sleep(Duration(seconds:45));
+    print("${IndexState.GEOID}");
+    String _command = "mkdir /home/saad18409/bitchassnigga"; //comand here
     print(_command);
     print(await client.execute(_command));
-    _command = "nohup python3 nvbi.py ${IndexState.ENDPOINT} ${IndexState.GEOID}>~/${IndexState.GEOID}/stdout.txt 2>~/${IndexState.GEOID}/stderr.txt &";
-    print(await client.execute(_command));
-    print(client.disconnect());
     address.clear();
     port.clear();
     username.clear();
     password.clear();
+    //_command = "nohup python3 nvbi.py ${IndexState.ENDPOINT} ${IndexState.GEOID}>~/${IndexState.GEOID}/stdout.txt 2>~/${IndexState.GEOID}/stderr.txt &";
+    //print(await client.execute(_command));
+    //print(client.disconnect());
+    //address.clear();
+    //port.clear();
+    //username.clear();
+    //password.clear();
     _get = true;
     return true;
   }
@@ -319,8 +325,10 @@ class getSSH {
         ph.PermissionStatus.granted) {
       try {
         String result = await client.connect();
+        sleep(Duration(seconds:45)); 
         if (result == "session_connected") {
           result = await client.connectSFTP();
+          sleep(Duration(seconds:45));    // Remove if not required
           if (result == "sftp_connected") {
             Directory tempDir = await getExternalStorageDirectory();
             String tempPath = tempDir.path;
