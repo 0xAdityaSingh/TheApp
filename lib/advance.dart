@@ -144,7 +144,7 @@ class advanceState extends State<advance> {
                         DropdownMenuItem(
                           value: "1",
                           child: Text(
-                            "Remove rRNA contamination",
+                            "Dont Trim reads",
 
                           ),
                         ),
