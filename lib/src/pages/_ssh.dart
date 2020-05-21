@@ -20,8 +20,11 @@ class IndexState extends State<IndexPage> {
   final _portController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-
+static String MQS = "";//int.parse(MQS);
+  static String LW = "";//int.parse(LW);
+  static String MRL = "";//int.parse(MRL);
   static String GEOID = "";
+  static String RadioValue = "";
   static String Value1 = "";
   static String Value2 = "";
   static int ENDPOINT = 2;
@@ -207,65 +210,63 @@ class IndexState extends State<IndexPage> {
                             Icons.arrow_forward_ios,
                           ),
                           onPressed: () {
+                            Future<bool> test = execute(
+                                                            _usernameController,
+                                                            _passwordController,
+                                                            _portController,
+                                                            _hostController);
+                                                            // print(test);
+                                                        // if (test == true) {
+                                                        //   _showNotificationWithDefaultSound();
+                                                        // }
+                                                      },
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                          RaisedButton(
+                                            // shape: StadiumBorder(),
+                                            color: Colors.blue,
+                                            child: Text(
+                                              "Download",
+                                              style: TextStyle(fontSize: 30),
+                                            ),
+                                            onPressed: () async {
+                                              Directory tempDir = await getTemporaryDirectory();
+                                              String tempPath = tempDir.path;
+                                              print(tempPath);
+                                              print(_get);
+                                              if (_get == true) {
+                                                getSSH.onClickSFTP(_usernameController, _passwordController,
+                                                    _portController, _hostController);
+                                                
+                                              } else {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (BuildContext context) => new AlertDialog(
+                                                          title: new Text(
+                                                            "Alert!!!",
+                                                            style: TextStyle(color: Colors.red),
+                                                          ),
+                                                          content: new Text("Process Not Completed"),
+                                                          elevation: 24,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  new BorderRadius.circular(10.0)),
+                                                        ));
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
                             
-                            Future<bool> test = executeSSH.execute(
-                                _usernameController,
-                                _passwordController,
-                                _portController,
-                                _hostController);
-                            if (test == true) {
-                              _showNotificationWithDefaultSound();
-                            }
-                          },
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              RaisedButton(
-                // shape: StadiumBorder(),
-                color: Colors.blue,
-                child: Text(
-                  "Download",
-                  style: TextStyle(fontSize: 30),
-                ),
-                onPressed: () async {
-                  Directory tempDir = await getTemporaryDirectory();
-                  String tempPath = tempDir.path;
-                  print(tempPath);
-                  print(_get);
-                  if (_get == true) {
-                    getSSH.onClickSFTP(_usernameController, _passwordController,
-                        _portController, _hostController);
-                    
-                  } else {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) => new AlertDialog(
-                              title: new Text(
-                                "Alert!!!",
-                                style: TextStyle(color: Colors.red),
-                              ),
-                              content: new Text("Process Not Completed"),
-                              elevation: 24,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(10.0)),
-                            ));
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class executeSSH {
-  static Future<bool> execute(
+Future<bool> execute(
     TextEditingController username,
     TextEditingController password,
     TextEditingController port,
@@ -282,13 +283,14 @@ class executeSSH {
 //    Enter Command To Execute on HPC
     sleep(Duration(seconds:45));
     print("${IndexState.GEOID}");
-    String _command = "mkdir /home/saad18409/bitchassnigga"; //comand here
+    String _command = "mkdir /home/aditya18378/bitchassnigga"; //comand here
     print(_command);
     print(await client.execute(_command));
     address.clear();
     port.clear();
     username.clear();
     password.clear();
+    _showNotificationWithDefaultSound();
     //_command = "nohup python3 nvbi.py ${IndexState.ENDPOINT} ${IndexState.GEOID}>~/${IndexState.GEOID}/stdout.txt 2>~/${IndexState.GEOID}/stderr.txt &";
     //print(await client.execute(_command));
     //print(client.disconnect());
@@ -300,6 +302,43 @@ class executeSSH {
     return true;
   }
 }
+
+// class executeSSH {
+//   static Future<bool> execute(
+//     TextEditingController username,
+//     TextEditingController password,
+//     TextEditingController port,
+//     TextEditingController address,
+//   ) async {
+//     var client = new SSHClient(
+//       host: address.text,
+//       port: int.parse(port.text),
+//       username: username.text,
+//       passwordOrKey: password.text,
+//     );
+// //    Do Not Change Anything Here
+//     await client.connect();
+// //    Enter Command To Execute on HPC
+//     sleep(Duration(seconds:45));
+//     print("${IndexState.GEOID}");
+//     String _command = "mkdir /home/aditya18378/bitchassnigga"; //comand here
+//     print(_command);
+//     print(await client.execute(_command));
+//     address.clear();
+//     port.clear();
+//     username.clear();
+//     password.clear();
+//     //_command = "nohup python3 nvbi.py ${IndexState.ENDPOINT} ${IndexState.GEOID}>~/${IndexState.GEOID}/stdout.txt 2>~/${IndexState.GEOID}/stderr.txt &";
+//     //print(await client.execute(_command));
+//     //print(client.disconnect());
+//     //address.clear();
+//     //port.clear();
+//     //username.clear();
+//     //password.clear();
+//     _get = true;
+//     return true;
+//   }
+// }
 
 class getSSH {
   
@@ -335,12 +374,25 @@ class getSSH {
             
                 var filePath = await client
                 .sftpDownload(
-                  path: "/home/saad/Desktop/test.html", //file path
+                  path: "/home/aditya18378/Test/test.html", //file path
                   toPath: "$tempPath/test.html", //place where u want it
                   callback: (progress) async {
                     print(progress);
                     print(tempPath);
                     print("Am here");
+                    showDialog(
+                        context: _context,
+                        builder: (BuildContext context) => new AlertDialog(
+                              title: new Text(
+                                "Alert!!!",
+                                style: TextStyle(color: Colors.green),
+                              ),
+                              content: new Text("Process Completed"),
+                              elevation: 24,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      new BorderRadius.circular(10.0)),
+                            ));
                     // if (progress == 20) await client.sftpCancelDownload();
                   },
                 );
