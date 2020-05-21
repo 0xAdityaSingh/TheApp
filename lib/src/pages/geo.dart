@@ -28,35 +28,6 @@ class GeoState extends State<GeoPage> {
     "gene ontology (R)"
   ];
 
-  _dropdown(currentItem, _list, listname) {
-    return DropdownButton<String>(
-      hint: new Text("End Point", style: TextStyle(color: Colors.blue)),
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: TextStyle(color: Colors.blue,fontSize: 18),
-      underline: Container(
-        height: 2,
-        color: Colors.blue,
-      ),
-      onChanged: (String newValue) {
-        for(var i=0;i<endOptions.length;i++){
-          if(endOptions[i]==newValue){
-            selectedEndPoint = i+1;
-          }
-        }
-        print(selectedEndPoint);
-        setState(() {
-        });
-      },
-      items: _list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,16 +78,6 @@ class GeoState extends State<GeoPage> {
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    child:
-                        _dropdown(this.selectedEndPoint, this.endOptions, "End Point"),
                   ),
                 ],
               ),

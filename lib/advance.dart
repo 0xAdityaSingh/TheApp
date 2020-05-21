@@ -23,7 +23,7 @@ class advanceState extends State<advance> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-                  "Advanced Options",
+                  "Options",
                  textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Colors.white,
